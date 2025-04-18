@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulator wagi penisa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
+    .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; position: relative; overflow: hidden; }
+    label, input, button { display: block; width: 100%; margin-bottom: 15px; font-size: 1rem; text-align: left; }
+    input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #45a049; }
+    #wynik { font-weight: bold; margin-top: 20px; text-align: center; font-size: 1.2rem; }
+    #porownanie { margin-top: 10px; text-align: center; font-style: italic; color: #555; }
+    .ikonka { font-size: 48px; margin-bottom: 20px; animation: bounce 1.2s infinite; }@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.banana { 
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  font-size: 80px;
+  animation: spin 6s linear infinite;
+  opacity: 0.1;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg) translateX(0); }
+  to { transform: rotate(360deg) translateX(200px); }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="banana">🍌</div>
+    <div class="ikonka">🍆</div>
+    <h2>Kalkulator wagi penisa</h2>
+    <label for="dlugosc">Długość (cm):</label>
+    <input type="number" id="dlugosc" step="0.1"><label for="obwod">Obwód (cm):</label>
+<input type="number" id="obwod" step="0.1">
+
+<button onclick="obliczWage()">Oblicz wagę</button>
+
+<div id="wynik"></div>
+<div id="porownanie"></div>
+
+  </div>  <audio id="plop">
+    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+    Twój przeglądarka nie obsługuje dźwięku.
+  </audio>  <script>
+    function obliczWage() {
+      const dlugosc = parseFloat(document.getElementById('dlugosc').value);
+      const obwod = parseFloat(document.getElementById('obwod').value);
+
+      if (isNaN(dlugosc) || isNaN(obwod)) {
+        document.getElementById('wynik').textContent = 'Proszę podać poprawne liczby.';
+        document.getElementById('porownanie').textContent = '';
+        return;
+      }
+
+      // Dźwięk + wibracja
+      document.getElementById('plop').play();
+      if ("vibrate" in navigator) {
+        navigator.vibrate([100]);
+      }
+
+      const pi = Math.PI;
+      const r = obwod / (2 * pi);
+      const objetosc = pi * r * r * dlugosc;
+      const gestosc = 1.06; // g/cm³
+      const masa = objetosc * gestosc;
+
+      document.getElementById('wynik').textContent = `Szacunkowa waga: ${masa.toFixed(2)} g`;
+      document.getElementById('porownanie').textContent = porownajMase(masa);
+    }
+
+    function porownajMase(masa) {
+      if (masa < 100) return 'To mniej więcej tyle, co średnie jajko.';
+      else if (masa < 200) return 'Podobna waga do dużego jajka lub małego jabłka.';
+      else if (masa < 300) return 'Waga porównywalna z typowym smartfonem.';
+      else if (masa < 400) return 'To tyle, co mały banan lub puszka napoju light.';
+      else return 'Ciężar zbliżony do dużego jabłka lub puszki coli.';
+    }
+  </script></body>
+</html>
