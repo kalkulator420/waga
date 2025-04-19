@@ -1,0 +1,173 @@
+<!-- FULL HTML CODE UPDATED WITH MODERN DARK THEME AND COMPARISON CHANGES --><!DOCTYPE html><html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Multi Kalkulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #f0f0f0;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: #333;
+      border-radius: 8px 8px 0 0;
+      margin: 0 5px;
+      color: #ccc;
+    }
+    .tab.active {
+      background: #4CAF50;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    label, input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      text-align: left;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 6px;
+      background: #1e1e1e;
+      color: #f0f0f0;
+    }
+    button {
+      padding: 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+      color: #f0f0f0;
+    }
+    hr {
+      border: 1px solid #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active" onclick="vibrate(); switchTab('penis')">Kalkulator penisa</div>
+    <div class="tab" onclick="vibrate(); switchTab('thc')">Kalkulator THC</div>
+  </div>  <div id="penis" class="tab-content active">
+    <h2>Kalkulator wagi penisa</h2>
+    <label>Długość (cm):</label>
+    <input type="number" id="dlugosc" step="0.1">
+    <label>Obwód (cm):</label>
+    <input type="number" id="obwod" step="0.1">
+    <button onclick="vibrate(); obliczWage()">Oblicz wagę</button>
+    <div class="result" id="wynik"></div>
+    <div class="result" id="porownanie"></div>
+    <hr>
+    <h3>Oszacuj wymiary z wagi</h3>
+    <label>Waga (g):</label>
+    <input type="number" id="masaSzacowana" step="0.1">
+    <button onclick="vibrate(); oszacujWymiary()">Oszacuj długość i obwód</button>
+    <div class="result" id="oszacowanie"></div>
+  </div>  <div id="thc" class="tab-content">
+    <h2>Kalkulator zawartości THC</h2>
+    <label>Zawartość THC (%):</label>
+    <input type="number" id="thcProcent" step="0.1">
+    <label>Ilość produktu w gramach (g):</label>
+    <input type="number" id="iloscGram" step="0.01">
+    <label>Ilość produktu w mililitrach (ml):</label>
+    <input type="number" id="iloscMl" step="0.01">
+    <button onclick="vibrate(); obliczTHC()">Oblicz zawartość THC</button>
+    <div class="result" id="thcWynik"></div>
+  </div>  <script>
+    function vibrate() {
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelector(`.tab[onclick*='${tab}']`).classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+
+    function obliczWage() {
+      const dl = parseFloat(document.getElementById('dlugosc').value);
+      const ob = parseFloat(document.getElementById('obwod').value);
+      const pi = Math.PI;
+      if (isNaN(dl) || isNaN(ob)) return;
+      const r = ob / (2 * pi);
+      const objetosc = pi * r * r * dl;
+      const gestosc = 1.06;
+      const masa = objetosc * gestosc;
+      document.getElementById('wynik').textContent = `Szacunkowa waga: ${masa.toFixed(2)} g`;
+      document.getElementById('porownanie').textContent = porownajMase(masa);
+    }
+
+    function oszacujWymiary() {
+      const masa = parseFloat(document.getElementById('masaSzacowana').value);
+      if (isNaN(masa)) return;
+      const gestosc = 1.06;
+      const pi = Math.PI;
+      const objetosc = masa / gestosc;
+      let wyniki = [];
+      for (let i = 0; i < 200 && wyniki.length < 5; i++) {
+        const dlugosc = +(8 + Math.random() * 13).toFixed(1);
+        const r = Math.sqrt(objetosc / (pi * dlugosc));
+        const obwod = 2 * pi * r;
+        if (obwod >= 8 && obwod <= 17) {
+          const para = `Długość: ${dlugosc.toFixed(1)} cm, Obwód: ${obwod.toFixed(1)} cm`;
+          if (!wyniki.includes(para)) wyniki.push(para);
+        }
+      }
+      document.getElementById('oszacowanie').innerHTML = wyniki.length ? wyniki.join('<br>') : 'Brak sensownych wyników.';
+    }
+
+    function porownajMase(masa) {
+      if (masa < 100) return 'To mniej więcej tyle, co średnie jajko.';
+      if (masa < 200) return 'Podobna waga do dużego jajka lub małego jabłka.';
+      if (masa < 300) return 'Waga porównywalna z typowym smartfonem.';
+      if (masa < 400) return 'To tyle, co mały kubek jogurtu naturalnego.';
+      return 'Ciężar zbliżony do dużego jabłka lub puszki napoju.';
+    }
+
+    function obliczTHC() {
+      const procent = parseFloat(document.getElementById('thcProcent').value);
+      const iloscG = parseFloat(document.getElementById('iloscGram').value) || 0;
+      const iloscMl = parseFloat(document.getElementById('iloscMl').value) || 0;
+      if (isNaN(procent)) return;
+      const thcMg = procent / 100 * (iloscG + iloscMl) * 1000;
+
+      let porownanie = '';
+      if (thcMg < 75) porownanie = 'mniej niż w klasycznym jointcie (75 mg)';
+      else if (thcMg < 200) porownanie = 'porównywalne z klasycznym jointem (75–200 mg)';
+      else porownanie = 'więcej niż w typowym mocnym jointcie (200 mg)';
+
+      document.getElementById('thcWynik').textContent = `Zawartość THC: ${thcMg.toFixed(2)} mg – ${porownanie}`;
+    }
+  </script></body>
+</html>
